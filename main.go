@@ -66,10 +66,6 @@ func main() {
 	if !ok {
 		log.Fatalf("Expected environment to contain `%s`", envSubscription)
 	}
-	resourcegroup, ok := os.LookupEnv(envResourceGroup)
-	if !ok {
-		log.Fatalf("Expected environment to contain `%s`", envResourceGroup)
-	}
 
 	// Azure Identity (uses local `az` CLI credentials)
 	creds, err := azidentity.NewDefaultAzureCredential(nil)
@@ -82,8 +78,8 @@ func main() {
 
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(collector.NewExporterCollector(OSVersion, GoVersion, GitCommit, StartTime))
-	registry.MustRegister(collector.NewContainerAppsCollector(account, subscription, resourcegroup, creds))
-	registry.MustRegister(collector.NewResourceGroupsCollector(account))
+	registry.MustRegister(collector.NewContainerAppsCollector(account, subscription, creds))
+	registry.MustRegister(collector.NewResourceGroupsCollector(account, subscription, creds))
 
 	mux := http.NewServeMux()
 	mux.Handle("/", http.HandlerFunc(handleRoot))

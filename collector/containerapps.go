@@ -60,6 +60,7 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 	for _, resourcegroup := range c.account.ResourceGroups {
 		wg.Add(1)
 		go func(rg *armresources.ResourceGroup) {
+			defer wg.Done()
 			count := 0
 			pager := c.client.NewListByResourceGroupPager(to.String(rg.Name), nil)
 			for pager.More() {
@@ -83,6 +84,7 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 		}(resourcegroup)
 	}
+	wg.Wait()
 
 	log.Println("[ContainerAppsCollector:Collect] completes")
 }
