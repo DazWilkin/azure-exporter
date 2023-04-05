@@ -1,0 +1,8 @@
+# Contains secrets
+alertmanager.yml
+
+# Cosign
+cosign.key
+
+# Visual Studio Code config
+.vscode/

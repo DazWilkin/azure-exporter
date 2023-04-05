@@ -1,3 +1,7 @@
+alertmanager.yml
+
 .vscode/
 
 .env.test
+
+cosign.key
