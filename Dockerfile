@@ -6,8 +6,8 @@ WORKDIR /azure-exporter
 
 COPY go.* .
 COPY main.go .
-COPY collector .
-COPY azure .
+COPY collector collector
+COPY azure azure
 
 ARG VERSION=""
 ARG COMMIT=""
