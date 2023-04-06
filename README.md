@@ -46,27 +46,28 @@ First, you'll need a certificate and key:
 openssl req \
 -x509 \
 -newkey rsa:4096 \
--keyout key.pem \
--out crt.pem \
+-keyout auzre-exporter.key \
+-out azure-exporter.crt \
 -sha256 \
 -days 365 \
 -nodes \
 -subj "/CN=azure-exporter"
 ```
 
-This will generate `crt.pem` and `key.pem`.
-
 In a subsequent step, the Azure CLI will set `AZURE_CLIENT_CERTIFICATE_PATH` to point to a file that contains **both** the key and cert:
 
 ```bash
-cat key.pem >> key+crt.pem
-cat crt.pem >> key+crt.pem
+cat azure-exporter.key >> azure-exporter.key+crt
+cat azure-exporter.crt >> azure-exporter.key+crt
 ```
+
 Then:
+
 ```bash
 SUBSCRIPTION="..."
 GROUP="..."
-NAME="..."
+
+NAME="azure-exporter"
 
 az ad sp create-for-rbac \
 --name=${NAME} \
@@ -93,7 +94,7 @@ SUBSCRIPTION="..." # Azure Subscription ID
 
 AZURE_CLIENT_ID="..." # Use values from Service Principal
 AZURE_TENANT_ID="..."
-AZURE_CLIENT_CERTIFICATE_PATH=".."
+AZURE_CLIENT_CERTIFICATE_PATH="${PWD}/azure-exporter.key+crt"
 
 PORT="9746"
 
@@ -103,8 +104,8 @@ podman run \
 --env=SUBSCRIPTION=${SUBSCRIPTION} \
 --env=AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
 --env=AZURE_TENANT_ID=${AZURE_TENANT_ID} \
---env=AZURE_CLIENT_CERTIFICATE_PATH=/secrets/crt+key.pem \
---volume=${AZURE_CLIENT_CERTIFICATE_PATH}:/secrets/crt+key.pem \
+--env=AZURE_CLIENT_CERTIFICATE_PATH=/secrets/azure-exporter.key+crt \
+--volume=${AZURE_CLIENT_CERTIFICATE_PATH}:/secrets/azure-exporter.key+crt \
 --publish=${PORT}:${PORT}/tcp \
 ghcr.io/dazwilkin/azure-exporter:2a7243d13c2e47bfab2cf30aacd92b4c1bf3d5b8 \
 --endpoint=0.0.0.0:${PORT} \
@@ -127,5 +128,14 @@ ghcr.io/dazwilkin/azure-exporter:2a7243d13c2e47bfab2cf30aacd92b4c1bf3d5b8 \
 For example:
 
 ```YAML
-
+groups:
+- name: azure_exporter
+  rules:
+  - alert: azure_container_apps_running
+    expr: min_over_time(container_apps_total{}[15m]) > 0
+    for: 6h
+    labels:
+      severity: page
+    annotations:
+      summary: "Azure Container Apps ({{ $value }}) running (resource group: {{ $labels.resourcegroup }})"
 ```
