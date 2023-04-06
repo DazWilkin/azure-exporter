@@ -6,3 +6,8 @@ cosign.key
 
 # Visual Studio Code config
 .vscode/
+
+# Keys
+azure-exporter.crt
+azure-exporter.key
+azure-exporter.key+crt

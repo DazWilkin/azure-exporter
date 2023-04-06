@@ -1,7 +1,13 @@
+
+# Contains secrets
 alertmanager.yml
-
 .vscode/
-
 .env.test
 
+# Keys
 cosign.key
+
+# Keys
+azure-exporter.crt
+azure-exporter.key
+azure-exporter.key+crt
