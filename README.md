@@ -132,10 +132,14 @@ groups:
 - name: azure_exporter
   rules:
   - alert: azure_container_apps_running
-    expr: min_over_time(container_apps_total{}[15m]) > 0
+    expr: min_over_time(azure_container_apps_total{}[15m]) > 0
     for: 6h
     labels:
       severity: page
     annotations:
       summary: "Azure Container Apps ({{ $value }}) running (resource group: {{ $labels.resourcegroup }})"
 ```
+
+<hr/>
+<br/>
+<a href="https://www.buymeacoffee.com/dazwilkin" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
