@@ -34,7 +34,7 @@ var (
 	StartTime = time.Now().Unix()
 )
 var (
-	endpoint    = flag.String("endpoint", ":9746", "The endpoint of the HTTP server")
+	endpoint    = flag.String("endpoint", ":8080", "The endpoint of the HTTP server")
 	metricsPath = flag.String("path", "/metrics", "The path on which Prometheus metrics will be served")
 )
 

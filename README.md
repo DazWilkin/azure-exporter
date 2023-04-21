@@ -23,7 +23,7 @@ Uses `azidentity.NewDefaultAzureCredential`, please `az login` to ensure credent
 ```bash
 SUBSCRIPTION="..." # Azure Subscription ID
 
-PORT="9746"
+PORT="8080"
 
 go run github.com/DazWilkin/azure-exporter \
 --endpoint="0.0.0.0:${PORT}" \
@@ -96,7 +96,7 @@ AZURE_CLIENT_ID="..." # Use values from Service Principal
 AZURE_TENANT_ID="..."
 AZURE_CLIENT_CERTIFICATE_PATH="${PWD}/azure-exporter.key+crt"
 
-PORT="9746"
+PORT="8080"
 
 podman run \
 --interactive --tty --rm \
