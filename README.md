@@ -73,7 +73,7 @@ az ad sp create-for-rbac \
 --name=${NAME} \
 --role="Reader" \
 --scopes="/subscriptions/${SUBSCRIPTION}/resourceGroups/${GROUP}" \
---cert=@${PWD}/crt.pem
+--cert=@${PWD}/${NAME}.crt
 ```
 Yields:
 ```JSON
