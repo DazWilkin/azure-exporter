@@ -43,22 +43,26 @@ Please create a Service Principal and use its credentials:
 First, you'll need a certificate and key:
 
 ```bash
+NAME="azure-exporter" # Or...
+
 openssl req \
 -x509 \
 -newkey rsa:4096 \
--keyout azure-exporter.key \
--out azure-exporter.crt \
+-keyout ${NAME}.key \
+-out ${NAME}.crt \
 -sha256 \
 -days 365 \
 -nodes \
--subj "/CN=azure-exporter"
+-subj "/CN=${NAME}"
 ```
 
 In a subsequent step, the Azure CLI will set `AZURE_CLIENT_CERTIFICATE_PATH` to point to a file that contains **both** the key and cert:
 
 ```bash
-cat azure-exporter.key >> azure-exporter.key+crt
-cat azure-exporter.crt >> azure-exporter.key+crt
+NAME="azure-exporter" # Or...
+
+cat ${NAME}.key >> ${NAME}.key+crt
+cat ${NAME}.crt >> ${NAME}.key+crt
 ```
 
 Then:
@@ -67,7 +71,7 @@ Then:
 SUBSCRIPTION="..."
 GROUP="..."
 
-NAME="azure-exporter"
+NAME="azure-exporter" # Or...
 
 az ad sp create-for-rbac \
 --name=${NAME} \
