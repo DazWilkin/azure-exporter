@@ -46,7 +46,7 @@ First, you'll need a certificate and key:
 openssl req \
 -x509 \
 -newkey rsa:4096 \
--keyout auzre-exporter.key \
+-keyout azure-exporter.key \
 -out azure-exporter.crt \
 -sha256 \
 -days 365 \
