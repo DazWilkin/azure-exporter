@@ -163,7 +163,6 @@ go install github.com/sigstore/cosign/cmd/cosign@latest
 
 ## Similar Exporters
 
-+ [Prometheus Exporter for Azure](https://github.com/DazWilkin/azure-exporter)
 + [Prometheus Exporter for Fly.io](https://github.com/DazWilkin/fly-exporter)
 + [Prometheus Exporter for GCP](https://github.com/DazWilkin/gcp-exporter)
 + [Prometheus Exporter for Koyeb](https://github.com/DazWilkin/koyeb-exporter)
