@@ -1,6 +1,7 @@
 # Prometheus Exporter for Azure
 
 [![build](https://github.com/DazWilkin/azure-exporter/actions/workflows/build.yml/badge.svg)](https://github.com/DazWilkin/azure-exporter/actions/workflows/build.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/DazWilkin/azure-exporter)](https://goreportcard.com/report/github.com/DazWilkin/azure-exporter)
 
 ## Installation
 
@@ -143,6 +144,31 @@ groups:
     annotations:
       summary: "Azure Container Apps ({{ $value }}) running (resource group: {{ $labels.resourcegroup }})"
 ```
+
+## Sigstore
+`azure-exporter` container images are being signed by [Sigstore](https://www.sigstore.dev/) and may be verified:
+
+```bash
+cosign verify \
+--key=./cosign.pub \
+ghcr.io/dazwilkin/azure-exporter:1cee3a77d40a58f62115cf072da19c17c47cfd85
+```
+
+> **NOTE** cosign.pub may be downloaded [here](/cosign.pub)
+
+To install cosign:
+```bash
+go install github.com/sigstore/cosign/cmd/cosign@latest
+```
+
+## Similar Exporters
+
++ [Prometheus Exporter for Azure](https://github.com/DazWilkin/azure-exporter)
++ [Prometheus Exporter for Fly.io](https://github.com/DazWilkin/fly-exporter)
++ [Prometheus Exporter for GCP](https://github.com/DazWilkin/gcp-exporter)
++ [Prometheus Exporter for Koyeb](https://github.com/DazWilkin/koyeb-exporter)
++ [Prometheus Exporter for Linode](https://github.com/DazWilkin/linode-exporter)
++ [Prometheus Exporter for Vultr](https://github.com/DazWilkin/vultr-exporter)
 
 <hr/>
 <br/>
