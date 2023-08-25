@@ -1,6 +1,7 @@
 # Prometheus Exporter for Azure
 
 [![build](https://github.com/DazWilkin/azure-exporter/actions/workflows/build.yml/badge.svg)](https://github.com/DazWilkin/azure-exporter/actions/workflows/build.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/DazWilkin/azure-exporter.svg)](https://pkg.go.dev/github.com/DazWilkin/azure-exporter)
 [![Go Report Card](https://goreportcard.com/badge/github.com/DazWilkin/azure-exporter)](https://goreportcard.com/report/github.com/DazWilkin/azure-exporter)
 
 ## Installation
