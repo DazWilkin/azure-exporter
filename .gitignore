@@ -7,7 +7,8 @@ alertmanager.yml
 # Keys
 cosign.key
 
-# Keys
-azure-exporter.crt
-azure-exporter.key
-azure-exporter.key+crt
+# Keys & stuff
+*.csr
+*.crt
+*.key
+*.key+crt
