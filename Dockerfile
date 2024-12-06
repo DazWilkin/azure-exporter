@@ -15,8 +15,8 @@ COPY main.go .
 COPY collector collector
 COPY azure azure
 
-ARG GOOS
-ARG GOARCH
+ARG TARGETOS
+ARG TARGETARCH
 
 ARG VERSION
 ARG COMMIT
