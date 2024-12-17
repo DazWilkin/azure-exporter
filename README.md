@@ -15,7 +15,7 @@ The application uses [`DefaultAzureCredential`](https://pkg.go.dev/github.com/Az
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/azure-exporter:86a2e71bff4ccecb9894a0be6cf6e6f1cbbd9026
+ghcr.io/dazwilkin/azure-exporter:f493b0c1ba0ebe32a532af6106d818561b47920d
 ```
 
 ## Go
@@ -113,7 +113,7 @@ podman run \
 --env=AZURE_CLIENT_CERTIFICATE_PATH=/secrets/azure-exporter.key+crt \
 --volume=${AZURE_CLIENT_CERTIFICATE_PATH}:/secrets/azure-exporter.key+crt \
 --publish=${PORT}:${PORT}/tcp \
-ghcr.io/dazwilkin/azure-exporter:86a2e71bff4ccecb9894a0be6cf6e6f1cbbd9026 \
+ghcr.io/dazwilkin/azure-exporter:f493b0c1ba0ebe32a532af6106d818561b47920d \
 --endpoint=0.0.0.0:${PORT} \
 --path="/metrics"
 ```
@@ -152,7 +152,7 @@ groups:
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/azure-exporter:86a2e71bff4ccecb9894a0be6cf6e6f1cbbd9026
+ghcr.io/dazwilkin/azure-exporter:f493b0c1ba0ebe32a532af6106d818561b47920d
 ```
 
 > **NOTE** cosign.pub may be downloaded [here](/cosign.pub)
