@@ -15,7 +15,7 @@ The application uses [`DefaultAzureCredential`](https://pkg.go.dev/github.com/Az
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/azure-exporter:5422a2234b7e6e093adf40e09ccff2e0bf5d271b
+ghcr.io/dazwilkin/azure-exporter:4abe4c15f59d492b5082f2264bffe4b44980f712
 ```
 
 ## Go
@@ -113,7 +113,7 @@ podman run \
 --env=AZURE_CLIENT_CERTIFICATE_PATH=/secrets/azure-exporter.key+crt \
 --volume=${AZURE_CLIENT_CERTIFICATE_PATH}:/secrets/azure-exporter.key+crt \
 --publish=${PORT}:${PORT}/tcp \
-ghcr.io/dazwilkin/azure-exporter:5422a2234b7e6e093adf40e09ccff2e0bf5d271b \
+ghcr.io/dazwilkin/azure-exporter:4abe4c15f59d492b5082f2264bffe4b44980f712 \
 --endpoint=0.0.0.0:${PORT} \
 --path="/metrics"
 ```
@@ -152,7 +152,7 @@ groups:
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/azure-exporter:5422a2234b7e6e093adf40e09ccff2e0bf5d271b
+ghcr.io/dazwilkin/azure-exporter:4abe4c15f59d492b5082f2264bffe4b44980f712
 ```
 
 > **NOTE** cosign.pub may be downloaded [here](/cosign.pub)
@@ -164,10 +164,15 @@ go install github.com/sigstore/cosign/cmd/cosign@latest
 
 ## Similar Exporters
 
++ [Prometheus Exporter for Azure](https://github.com/DazWilkin/azure-exporter)
++ [Prometheus Exporter for crt.sh](https://github.com/DazWilkin/crtsh-exporter)
 + [Prometheus Exporter for Fly.io](https://github.com/DazWilkin/fly-exporter)
-+ [Prometheus Exporter for GCP](https://github.com/DazWilkin/gcp-exporter)
++ [Prometheus Exporter for GoatCounter](https://github.com/DazWilkin/goatcounter-exporter)
++ [Prometheus Exporter for Google Cloud](https://github.com/DazWilkin/gcp-exporter)
 + [Prometheus Exporter for Koyeb](https://github.com/DazWilkin/koyeb-exporter)
 + [Prometheus Exporter for Linode](https://github.com/DazWilkin/linode-exporter)
++ [Prometheus Exporter for PorkBun](https://github.com/DazWilkin/porkbun-exporter)
++ [Prometheus Exporter for updown.io](https://github.com/DazWilkin/updown-exporter)
 + [Prometheus Exporter for Vultr](https://github.com/DazWilkin/vultr-exporter)
 
 <hr/>
