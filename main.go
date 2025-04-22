@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +22,29 @@ const (
 	envSubscription  string = "SUBSCRIPTION"
 	envResourceGroup string = "RESOURCE_GROUP"
 )
+const (
+	rootTemplate string = `
+{{- define "content" }}
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Prometheus Exporter for Azure</title>
+<style>
+body {
+  font-family: Verdana;
+}
+</style>
+</head>
+<body>
+	<h2>Prometheus Exporter for Azure</h2>
+	<ul>
+	<li><a href="{{ .MetricsPath }}">metrics</a></li>
+	<li><a href="/healthz">healthz</a></li>
+	</ul>
+</body>
+</html>
+{{- end }}`
+)
 
 var (
 	// GitCommit is the git commit value and is expected to be set during build
@@ -40,15 +63,21 @@ var (
 
 func handleHealthz(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
+	if _, err := w.Write([]byte("ok")); err != nil {
+		log.Println(err)
+	}
 }
 func handleRoot(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
-	fmt.Fprint(w, "<h2>Azure Resources Exporter</h2>")
-	fmt.Fprint(w, "<ul>")
-	fmt.Fprintf(w, "<li><a href=\"%s\">metrics</a></li>", *metricsPath)
-	fmt.Fprintf(w, "<li><a href=\"/healthz\">healthz</a></li>")
-	fmt.Fprint(w, "</ul>")
+	t := template.Must(template.New("content").Parse(rootTemplate))
+	if err := t.ExecuteTemplate(w, "content", struct {
+		MetricsPath string
+	}{
+		MetricsPath: *metricsPath,
+	}); err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 func main() {
 	flag.Parse()
