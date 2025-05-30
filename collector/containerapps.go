@@ -8,7 +8,6 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armresources"
-	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/DazWilkin/azure-exporter/azure"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -62,7 +61,7 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 		go func(rg *armresources.ResourceGroup) {
 			defer wg.Done()
 			count := 0
-			pager := c.client.NewListByResourceGroupPager(to.String(rg.Name), nil)
+			pager := c.client.NewListByResourceGroupPager(*rg.Name, nil)
 			for pager.More() {
 				page, err := pager.NextPage(ctx)
 				if err != nil {
@@ -79,7 +78,7 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 				prometheus.GaugeValue,
 				float64(count),
 				[]string{
-					to.String(rg.Name),
+					*rg.Name,
 				}...,
 			)
 		}(resourcegroup)
