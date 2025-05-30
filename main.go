@@ -102,14 +102,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Object that holds Azure-specific resources (e.g. Resource Groups)
-	account := azure.NewAccount()
+	// Object that holds Azure resources that are caches between collectors (e.g. Resource Groups)
+	cache := azure.NewCache()
 
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(collector.NewExporterCollector(OSVersion, GoVersion, GitCommit, StartTime))
-	registry.MustRegister(collector.NewAccountCollector(account, subscription, creds))
-	registry.MustRegister(collector.NewContainerAppsCollector(account, subscription, creds))
-	registry.MustRegister(collector.NewResourceGroupsCollector(account, subscription, creds))
+	registry.MustRegister(collector.NewAccountCollector(subscription, creds))
+	registry.MustRegister(collector.NewContainerAppsCollector(subscription, creds, cache))
+	registry.MustRegister(collector.NewResourceGroupsCollector(subscription, creds, cache))
 
 	mux := http.NewServeMux()
 	mux.Handle("/", http.HandlerFunc(handleRoot))

@@ -16,14 +16,14 @@ var _ prometheus.Collector = (*ResourceGroupsCollector)(nil)
 
 // ResourceGroupsCollector represents Azure Resource Groups
 type ResourceGroupsCollector struct {
-	account *azure.Account
-	client  *armresources.ResourceGroupsClient
+	client *armresources.ResourceGroupsClient
+	cache  *azure.Cache
 
 	Groups *prometheus.Desc
 }
 
 // NewResourceGroupsCollector is a function that creates a new ResourceGroupsCollector
-func NewResourceGroupsCollector(account *azure.Account, subscription string, creds *azidentity.DefaultAzureCredential) *ResourceGroupsCollector {
+func NewResourceGroupsCollector(subscription string, creds *azidentity.DefaultAzureCredential, cache *azure.Cache) *ResourceGroupsCollector {
 	subsystem := "resource_groups"
 
 	client, err := armresources.NewResourceGroupsClient(subscription, creds, nil)
@@ -33,8 +33,8 @@ func NewResourceGroupsCollector(account *azure.Account, subscription string, cre
 	}
 
 	return &ResourceGroupsCollector{
-		account: account,
-		client:  client,
+		cache:  cache,
+		client: client,
 
 		Groups: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, subsystem, "total"),
@@ -66,7 +66,7 @@ func (c *ResourceGroupsCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	// Update azure.Account with new list of Resource Groups
-	c.account.Update(resourcegroups)
+	c.cache.Update(resourcegroups)
 
 	ch <- prometheus.MustNewConstMetric(
 		c.Groups,

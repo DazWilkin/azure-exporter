@@ -17,14 +17,14 @@ var _ prometheus.Collector = (*ContainerAppsCollector)(nil)
 
 // ContainerAppsCollector represents Azure Container Apps
 type ContainerAppsCollector struct {
-	account *azure.Account
-	client  *armappcontainers.ContainerAppsClient
+	client *armappcontainers.ContainerAppsClient
+	cache  *azure.Cache
 
 	Apps *prometheus.Desc
 }
 
 // NewContainerAppsCollector returns a new ContainerAppsCollector
-func NewContainerAppsCollector(account *azure.Account, subscription string, creds *azidentity.DefaultAzureCredential) *ContainerAppsCollector {
+func NewContainerAppsCollector(subscription string, creds *azidentity.DefaultAzureCredential, cache *azure.Cache) *ContainerAppsCollector {
 	subsystem := "container_apps"
 
 	clientFactory, err := armappcontainers.NewClientFactory(subscription, creds, nil)
@@ -35,8 +35,8 @@ func NewContainerAppsCollector(account *azure.Account, subscription string, cred
 	client := clientFactory.NewContainerAppsClient()
 
 	return &ContainerAppsCollector{
-		account: account,
-		client:  client,
+		cache:  cache,
+		client: client,
 
 		Apps: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, subsystem, "total"),
@@ -56,7 +56,7 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 	ctx := context.Background()
 
 	var wg sync.WaitGroup
-	for _, resourcegroup := range c.account.ResourceGroups {
+	for _, resourcegroup := range c.cache.ResourceGroups {
 		wg.Add(1)
 		go func(rg *armresources.ResourceGroup) {
 			defer wg.Done()

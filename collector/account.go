@@ -8,7 +8,6 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/billing/armbilling"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/consumption/armconsumption"
-	"github.com/DazWilkin/azure-exporter/azure"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -16,9 +15,7 @@ var _ prometheus.Collector = (*AccountCollector)(nil)
 
 // AccountCollector represents Azure Account
 type AccountCollector struct {
-	account *azure.Account
-
-	accountClient  *armbilling.AccountsClient
+	accountsClient *armbilling.AccountsClient
 	balancesClient *armconsumption.BalancesClient
 
 	// Metrics
@@ -26,7 +23,7 @@ type AccountCollector struct {
 }
 
 // NewAccountCollector return a new AccountCollector
-func NewAccountCollector(account *azure.Account, subscription string, creds *azidentity.DefaultAzureCredential) *AccountCollector {
+func NewAccountCollector(subscription string, creds *azidentity.DefaultAzureCredential) *AccountCollector {
 	subsystem := "account"
 
 	accountClient, err := armbilling.NewAccountsClient(creds, nil)
@@ -35,15 +32,14 @@ func NewAccountCollector(account *azure.Account, subscription string, creds *azi
 		return nil
 	}
 
+	// https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/consumption/armconsumption@v1.2.0#NewBalancesClient
 	balancesClient, err := armconsumption.NewBalancesClient(creds, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	return &AccountCollector{
-		account: account,
-
-		accountClient:  accountClient,
+		accountsClient: accountClient,
 		balancesClient: balancesClient,
 
 		currentbalance: prometheus.NewDesc(
@@ -63,7 +59,7 @@ func (c *AccountCollector) Collect(ch chan<- prometheus.Metric) {
 
 	ctx := context.Background()
 
-	pager := c.accountClient.NewListPager(nil)
+	pager := c.accountsClient.NewListPager(nil)
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
@@ -76,6 +72,7 @@ func (c *AccountCollector) Collect(ch chan<- prometheus.Metric) {
 			// Name is the Billing ID
 			accountID := *account.Name
 
+			// https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/consumption/armconsumption@v1.2.0#BalancesClient.GetByBillingAccount
 			resp, err := c.balancesClient.GetByBillingAccount(ctx, accountID, nil)
 			if err != nil {
 				if err := err.(*azcore.ResponseError); err != nil {
@@ -89,12 +86,12 @@ func (c *AccountCollector) Collect(ch chan<- prometheus.Metric) {
 				return
 			}
 
-			if resp.Balance.Properties == nil {
+			if resp.Properties == nil {
 				log.Println("[AccountCollector:Collect] no balance properties returned")
 				return
 			}
 
-			p := resp.Balance.Properties
+			p := resp.Properties
 
 			ch <- prometheus.MustNewConstMetric(
 				c.currentbalance,
