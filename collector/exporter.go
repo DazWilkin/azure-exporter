@@ -13,8 +13,8 @@ type ExporterCollector struct {
 	osVersion string
 	startTime int64
 
-	StartTime *prometheus.Desc
-	BuildInfo *prometheus.Desc
+	starttime *prometheus.Desc
+	buildinfo *prometheus.Desc
 }
 
 // NewExporterCollector returns a new ExporterCollector.
@@ -26,13 +26,13 @@ func NewExporterCollector(osVersion, goVersion, gitCommit string, startTime int6
 		gitCommit: gitCommit,
 		startTime: startTime,
 
-		StartTime: prometheus.NewDesc(
+		starttime: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, subsystem, "start_time"),
 			"Exporter start time in Unix epoch seconds",
 			nil,
 			nil,
 		),
-		BuildInfo: prometheus.NewDesc(
+		buildinfo: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, subsystem, "build_info"),
 			"A metric with a constant '1' value labeled by OS version, Go version, and the Git commit of the exporter",
 			[]string{"os_version", "go_version", "git_commit"},
@@ -44,12 +44,12 @@ func NewExporterCollector(osVersion, goVersion, gitCommit string, startTime int6
 // Collect implements Prometheus' Collector interface and is used to collect metrics
 func (c *ExporterCollector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(
-		c.StartTime,
+		c.starttime,
 		prometheus.GaugeValue,
 		float64(c.startTime),
 	)
 	ch <- prometheus.MustNewConstMetric(
-		c.BuildInfo,
+		c.buildinfo,
 		prometheus.CounterValue,
 		1.0,
 		c.osVersion, c.goVersion, c.gitCommit,
@@ -58,5 +58,5 @@ func (c *ExporterCollector) Collect(ch chan<- prometheus.Metric) {
 
 // Describe implements Prometheus' Collector interface and is used to describe metrics
 func (c *ExporterCollector) Describe(ch chan<- *prometheus.Desc) {
-	ch <- c.StartTime
+	ch <- c.starttime
 }

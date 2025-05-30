@@ -19,7 +19,7 @@ type ResourceGroupsCollector struct {
 	client *armresources.ResourceGroupsClient
 	cache  *azure.Cache
 
-	Groups *prometheus.Desc
+	groups *prometheus.Desc
 }
 
 // NewResourceGroupsCollector is a function that creates a new ResourceGroupsCollector
@@ -36,7 +36,7 @@ func NewResourceGroupsCollector(subscription string, creds *azidentity.DefaultAz
 		cache:  cache,
 		client: client,
 
-		Groups: prometheus.NewDesc(
+		groups: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, subsystem, "total"),
 			"Number of Resource Groups",
 			nil,
@@ -69,7 +69,7 @@ func (c *ResourceGroupsCollector) Collect(ch chan<- prometheus.Metric) {
 	c.cache.Update(resourcegroups)
 
 	ch <- prometheus.MustNewConstMetric(
-		c.Groups,
+		c.groups,
 		prometheus.GaugeValue,
 		float64(len(resourcegroups)),
 		[]string{}...,
@@ -80,5 +80,5 @@ func (c *ResourceGroupsCollector) Collect(ch chan<- prometheus.Metric) {
 
 // Describe implements Prometheus' Collector interface and is used to describe metrics
 func (c *ResourceGroupsCollector) Describe(ch chan<- *prometheus.Desc) {
-	ch <- c.Groups
+	ch <- c.groups
 }

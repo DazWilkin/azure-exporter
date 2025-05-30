@@ -20,7 +20,7 @@ type ContainerAppsCollector struct {
 	client *armappcontainers.ContainerAppsClient
 	cache  *azure.Cache
 
-	Apps *prometheus.Desc
+	apps *prometheus.Desc
 }
 
 // NewContainerAppsCollector returns a new ContainerAppsCollector
@@ -38,7 +38,7 @@ func NewContainerAppsCollector(subscription string, creds *azidentity.DefaultAzu
 		cache:  cache,
 		client: client,
 
-		Apps: prometheus.NewDesc(
+		apps: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, subsystem, "total"),
 			"Number of Container Apps deployed",
 			[]string{
@@ -74,7 +74,7 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 			}
 
 			ch <- prometheus.MustNewConstMetric(
-				c.Apps,
+				c.apps,
 				prometheus.GaugeValue,
 				float64(count),
 				[]string{
@@ -90,5 +90,5 @@ func (c *ContainerAppsCollector) Collect(ch chan<- prometheus.Metric) {
 
 // Describe implements Prometheus' Collector interface and is used to describe metrics
 func (c *ContainerAppsCollector) Describe(ch chan<- *prometheus.Desc) {
-	ch <- c.Apps
+	ch <- c.apps
 }
