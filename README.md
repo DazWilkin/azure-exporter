@@ -122,6 +122,7 @@ ghcr.io/dazwilkin/azure-exporter:f2025b1c7e8a32a4abe5e419a36bc7fb3a374450 \
 
 |Name|Type|Description|
 |----|----|-----------|
+|`azure_account_current_balance`|Gauge|Azure current account balance|
 |`azure_container_apps_total`|Gauge|Number of Azure Container Apps deployed|
 |`azure_exporter_build_info`|Counter|Describes build info|
 |`azure_exporter_start_time`|Gauge|The time (UNIX epoch) when the exporter started|

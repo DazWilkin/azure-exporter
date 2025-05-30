@@ -107,6 +107,7 @@ func main() {
 
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(collector.NewExporterCollector(OSVersion, GoVersion, GitCommit, StartTime))
+	registry.MustRegister(collector.NewAccountCollector(account, subscription, creds))
 	registry.MustRegister(collector.NewContainerAppsCollector(account, subscription, creds))
 	registry.MustRegister(collector.NewResourceGroupsCollector(account, subscription, creds))
 
